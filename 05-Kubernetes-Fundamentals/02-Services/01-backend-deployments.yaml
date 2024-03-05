@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-restapp
+  labels: 
+    app: backend-restapp
+    tier: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend-restapp
+  template:
+    metadata:
+      labels:
+        app: backend-restapp
+    spec:
+      containers:
+      - name: backend-restapp
+        image: stacksimplifiy/kube-helloworld:1.0.0
+        resources:
+          limits:
+            memory: "64Mi"
+            cpu: "200m"
+        ports:
+        - name: https
+          containerPort: 8080
