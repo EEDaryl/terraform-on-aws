@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myingress
+  labels:
+    name: myingress
+  annotations:
+    alb.ingress.kubernetes.io/healthcheck-path: /app1/index.html
+    external-dns.alpha.kubernetes.io/hostname: extdns-k8s-service-demo101.truemekok.online
+spec:
+  rules:
+  - host: <Host>
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: <Service>
+            port: 
+              number: <Port>
