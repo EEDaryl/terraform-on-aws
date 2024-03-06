@@ -43,7 +43,7 @@ resource "kubernetes_ingress_v1" "ingress" {
 
     # Rule-1: Route requests to App1 if the DNS is "tfapp101.stacksimplify.com"
     rule {
-      host = "tfapp101.stacksimplify.com"      
+      host = "tfapp101.truemekok.online"      
       http {
         path {
           backend {

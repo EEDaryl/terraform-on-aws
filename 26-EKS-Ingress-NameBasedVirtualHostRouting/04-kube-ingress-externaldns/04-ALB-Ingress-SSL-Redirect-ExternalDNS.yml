@@ -15,7 +15,7 @@ spec:
       port:
         number: 80
   rules:
-    - host: app101.stacksimplify.com
+    - host: app101.truemekok.online
       http:
         paths:
           - path: /
