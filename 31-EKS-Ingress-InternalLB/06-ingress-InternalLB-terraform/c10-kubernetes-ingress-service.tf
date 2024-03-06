@@ -35,6 +35,7 @@ resource "kubernetes_ingress_v1" "ingress" {
       "alb.ingress.kubernetes.io/ssl-redirect" = 443
       #Target-Type = IP
       "alb.ingress.kubernetes.io/target-type" = "ip"
+      "alb.ingress.kubernetes.io/scheme" = "internal" 
     # External DNS - For creating a Record Set in Route53
       "external-dns.alpha.kubernetes.io/hostname" = "tfcertdiscovery-tls-102.truemekok.online"
     }    
