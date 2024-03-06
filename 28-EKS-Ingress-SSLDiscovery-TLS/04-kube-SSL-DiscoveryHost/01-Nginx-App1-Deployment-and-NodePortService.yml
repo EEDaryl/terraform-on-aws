@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app3-nginx-deployment
+  name: app1-nginx-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: app3-nginx
+      app: app1-nginx
   template:
     metadata:
       labels:
-        app: app3-nginx
+        app: app1-nginx
     spec:
       containers:
-      - name: app3-nginx
+      - name: app1-nginx
         image: stacksimplify/kubenginx:1.0.0
         resources:
           limits:
