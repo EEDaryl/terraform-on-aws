@@ -15,20 +15,23 @@ spec:
       port:
         number: 80
   rules:
-  - http:
-        paths:      
-          - path: /app1
+    - host: app101.stacksimplify.com
+      http:
+        paths:
+          - path: /
             pathType: Prefix
             backend:
               service:
                 name: app1-nginx-nodeport-service
                 port: 
                   number: 80
-          - path: /app2
+    - host: app201.stacksimplify.com
+      http:
+        paths:                  
+          - path: /
             pathType: Prefix
             backend:
               service:
                 name: app2-nginx-nodeport-service
                 port: 
                   number: 80
-
