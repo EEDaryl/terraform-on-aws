@@ -1,11 +1,18 @@
+# Wait 60 seconds after ACM Certificate Resource is created and changed the Certificate status to ISSUED
+resource "time_sleep" "wait_60_seconds" {
+  depends_on = [aws_acm_certificate.acm_cert]
+  create_duration = "60s"
+}
+
 # Kubernetes Service Manifest (Type: Load Balancer)
 resource "kubernetes_ingress_v1" "ingress" {
-  depends_on = [aws_acm_certificate.acm_cert]
+# This resource will create (at least) 60 seconds after aws_acm_certificate.acm_cert 
+  depends_on = [time_sleep.wait_60_seconds]
   metadata {
-    name = "ingress-certdiscoveryhost-demo"
+    name = "ingress-certdiscoverytls-demo"
     annotations = {
       # Load Balancer Name
-      "alb.ingress.kubernetes.io/load-balancer-name" = "ingress-certdiscoveryhost-demo"
+      "alb.ingress.kubernetes.io/load-balancer-name" = "certdiscoverytls-ingress"
       # Ingress Core Settings
       "alb.ingress.kubernetes.io/scheme" = "internet-facing"
       # Health Check Settings
@@ -22,18 +29,16 @@ resource "kubernetes_ingress_v1" "ingress" {
       "alb.ingress.kubernetes.io/listen-ports" = jsonencode([{"HTTPS" = 443}, {"HTTP" = 80}])
       # Option-2: Using Terraform File Function      
       #"alb.ingress.kubernetes.io/listen-ports" = file("${path.module}/listen-ports/listen-ports.json")
-      #"alb.ingress.kubernetes.io/certificate-arn" =  "arn:aws:acm:us-east-1:180789647333:certificate/d86de939-8ffd-410f-adce-0ce1f5be6e0d"
+      #"alb.ingress.kubernetes.io/certificate-arn" =  "${aws_acm_certificate.acm_cert.arn}"
       #"alb.ingress.kubernetes.io/ssl-policy" = "ELBSecurityPolicy-TLS-1-1-2017-01" #Optional (Picks default if not used)    
       # SSL Redirect Setting
       "alb.ingress.kubernetes.io/ssl-redirect" = 443
     # External DNS - For creating a Record Set in Route53
-      "external-dns.alpha.kubernetes.io/hostname" = "tfdefault102.stacksimplify.com"
+      "external-dns.alpha.kubernetes.io/hostname" = "tfcertdiscovery-tls-102.truemekok.online"
     }    
   }
-
   spec {
-    ingress_class_name = "my-aws-ingress-class" # Ingress Class        
-    # Default Rule: Route requests to App3 if the DNS is "tfdefault101.stacksimplify.com"        
+    ingress_class_name = "my-aws-ingress-class" # Ingress Class            
     default_backend {
       service {
         name = kubernetes_service_v1.myapp3_np_service.metadata[0].name
@@ -42,10 +47,11 @@ resource "kubernetes_ingress_v1" "ingress" {
         }
       }
     }
-
-    # Rule-1: Route requests to App1 if the DNS is "tfapp101.stacksimplify.com"
+    # SSL Certificate Discovery using TLS
+    tls {
+      hosts = [ "*.truemekok.online" ]
+    }      
     rule {
-      host = "tfapp101.stacksimplify.com"      
       http {
         path {
           backend {
@@ -56,16 +62,10 @@ resource "kubernetes_ingress_v1" "ingress" {
               }
             }
           }
-          path = "/"
+          path = "/app1"
           path_type = "Prefix"
         }
-      }        
-    }
 
-    # Rule-2: Route requests to App2 if the DNS is "tfapp102.stacksimplify.com"
-    rule {
-      host = "tfapp201.stacksimplify.com"      
-      http {
         path {
           backend {
             service {
@@ -75,10 +75,10 @@ resource "kubernetes_ingress_v1" "ingress" {
               }
             }
           }
-          path = "/"
+          path = "/app2"
           path_type = "Prefix"
         }
-      }        
+      }
     }
   }
 }

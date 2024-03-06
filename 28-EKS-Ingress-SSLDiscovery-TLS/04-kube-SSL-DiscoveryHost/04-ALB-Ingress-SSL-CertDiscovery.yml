@@ -14,21 +14,20 @@ spec:
       name: app3-nginx-nodeport-service
       port:
         number: 80
+  tls:
+    - hosts:
+      - *.truemekok.online
   rules:
-    - host: app101.truemekok.online
-      http:
+    - http:
         paths:
-          - path: /
+          - path: /app1
             pathType: Prefix
             backend:
               service:
                 name: app1-nginx-nodeport-service
                 port: 
-                  number: 80
-    - host: app201.truemekok.online
-      http:
-        paths:                  
-          - path: /
+                  number: 80                
+          - path: /app2
             pathType: Prefix
             backend:
               service:
