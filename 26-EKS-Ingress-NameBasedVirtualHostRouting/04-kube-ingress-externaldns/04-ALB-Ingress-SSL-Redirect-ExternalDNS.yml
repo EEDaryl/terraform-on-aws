@@ -5,15 +5,10 @@ metadata:
   labels:
     name: myingress
   annotations:
-        # External DNS - For creating a Record Set in Route53
-    external-dns.alpha.kubernetes.io/hostname: dnstest901.truemekok.online, dnstest902.truemekok.online
-  defaultBackend:
-    service:
-      name: app3-nginx-nodeport-service
-      port:
-        number: 80
+    alb.ingress.kubernetes.io/healthcheck-path: /app1/index.html
+    external-dns.alpha.kubernetes.io/hostname: extdns-k8s-service-demo101.truemekok.online
 spec:
-  ingressClassName: my-ingres-class
+  ingressClassName: my-ingress-class
   defaultBackend:
     service:
       name: app3-nginx-nodeport-service
