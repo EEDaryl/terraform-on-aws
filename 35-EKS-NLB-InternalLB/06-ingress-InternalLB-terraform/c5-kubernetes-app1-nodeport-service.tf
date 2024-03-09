@@ -1,5 +1,5 @@
 # Kubernetes Service Manifest (Type: Network Load Balancer Service)
-resource "kubernetes_service_v1" "myapp3_nlb_service" {
+resource "kubernetes_service_v1" "myapp1_nlb_service" {
   metadata {
     name = "lbc-network-lb-internal"
     annotations = {
