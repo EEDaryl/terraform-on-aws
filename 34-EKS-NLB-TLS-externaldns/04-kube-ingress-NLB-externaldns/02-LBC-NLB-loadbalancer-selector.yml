@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: basics-lbc-network-lb
   annotations:
+      # External DNS - For creating a Record Set in Route53
+    external-dns.alpha.kubernetes.io/hostname: nlbdns101.truemekok.online
     # Traffic Routing
     service.beta.kubernetes.io/aws-load-balancer-name: basics-lbc-network-lb
     service.beta.kubernetes.io/aws-load-balancer-type: external

@@ -3,6 +3,8 @@ resource "kubernetes_service_v1" "myapp3_nlb_service" {
   metadata {
     name = "extdns-tls-lbc-network-lb"
     annotations = {
+          # External DNS - For creating a Record Set in Route53
+      "external-dns.alpha.kubernetes.io/hostname" = "nlbdns101.truemekok.online"
       # Traffic Routing
       "service.beta.kubernetes.io/aws-load-balancer-name" = "extdns-tls-lbc-network-lb"
       "service.beta.kubernetes.io/aws-load-balancer-type" = "external"
